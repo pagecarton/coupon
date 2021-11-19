@@ -374,11 +374,14 @@ class Coupon_Apply extends Coupon_Table_Abstract
      * param array Order information
      */
 	public static function callback(& $orderInfo )
-    {                
+    {         
+       
         if( ! empty( $orderInfo['code_used'] ) )
         {
             return true;
         }
+
+
         $where = array( 'code' => $orderInfo['code'] );
         $orderInfo['code_used'] = true;
         if( ! $coupon = Coupon_Table::getInstance()->selectOne( null, $where ) )
@@ -386,6 +389,13 @@ class Coupon_Apply extends Coupon_Table_Abstract
             return false;
         }
         Coupon_Table::getInstance()->update( array( 'usage' => $coupon['usage'] + 1 ), $where );
+        Coupon_Usage::getInstance()->insert( 
+            array( 
+                'email' => $orderInfo['full_order_info']['email'],
+                'username' => $orderInfo['full_order_info']['username'],
+                'code' => $orderInfo['code_used'],
+            )
+        );
         return true;
 	}
 	// END OF CLASS
