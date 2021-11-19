@@ -64,7 +64,7 @@ class Coupon_Table_Abstract extends PageCarton_Widget
 
 		$fieldset = new Ayoola_Form_Element;
     
-        if( ! empty( $values['code'] ) )
+        if( empty( $values['code'] ) )
         {
             $fieldset->addElement( array( 'name' => 'code', 'label' => 'Promo Code', 'placeholder' => 'e.g. SALE67', 'type' => 'InputText', 'value' => @$values['code'] ) );         
         }
