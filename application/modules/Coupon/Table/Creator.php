@@ -43,7 +43,10 @@ class Coupon_Table_Creator extends Coupon_Table_Abstract
             $successMessage = 'Coupon code has been successfully added to the Coupon Management System. You can now begin to use this code to promote your products and services. Customers can use this code in two ways:
 
             1. Customers can enter this coupon code "' . $values['code'] . '" on checkout to get value of the coupon.
-            2. Customer can use the following link to access the website, the coupon will be activated automatically when they get to the checkout: ' . Ayoola_Page::getHomePageUrl() . '?coupon=' . $values['code'];
+            2. Customer can use the following link to access the website, the coupon will be activated automatically when they get to the checkout: ' . Ayoola_Page::getHomePageUrl() . '?coupon=' . $values['code'] . '
+            
+            To manage all coupon codes and add new ones, visit ' . Ayoola_Page::getHomePageUrl() . '/widgets/Coupon_Table_List
+            ';
 
 
 			//	Notify Admin
