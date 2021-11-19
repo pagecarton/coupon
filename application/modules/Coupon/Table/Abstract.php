@@ -61,11 +61,17 @@ class Coupon_Table_Abstract extends PageCarton_Widget
 		//	Form to create a new page
         $form = new Ayoola_Form( array( 'name' => $this->getObjectName(), 'data-not-playable' => true ) );
 		$form->submitValue = $submitValue ;
-//		$form->oneFieldSetAtATime = true;
 
 		$fieldset = new Ayoola_Form_Element;
-	//	$fieldset->placeholderInPlaceOfLabel = false;       
-        $fieldset->addElement( array( 'name' => 'code', 'label' => 'Promo Code', 'placeholder' => 'e.g. SALE67', 'type' => 'InputText', 'value' => @$values['code'] ) );         
+    
+        if( ! empty( $values['code'] ) )
+        {
+            $fieldset->addElement( array( 'name' => 'code', 'label' => 'Promo Code', 'placeholder' => 'e.g. SALE67', 'type' => 'InputText', 'value' => @$values['code'] ) );         
+        }
+        else
+        {
+            $fieldset->addElement( array( 'name' => 'code-x', 'label' => 'Promo Code', 'disabled' => true, 'placeholder' => 'e.g. SALE67', 'type' => 'InputText', 'value' => @$values['code'] ) );         
+        }
         $fieldset->addElement( array( 'name' => 'value', 'label' => 'Value of Promo Code', 'placeholder' => 'e.g. 400', 'type' => 'InputText', 'value' => @$values['value'] ) );         
 
         $type = array(
@@ -73,7 +79,7 @@ class Coupon_Table_Abstract extends PageCarton_Widget
             'percentage' => 'Percentage of Total Order',
         );
 
-        $fieldset->addElement( array( 'name' => 'd', 'label' => 'Value Type', 'type' => 'Select', 'value' => @$values['type'] ), $type );  
+        $fieldset->addElement( array( 'name' => 'type', 'label' => 'Value Type', 'type' => 'Select', 'value' => @$values['type'] ), $type );  
         
         $v = array();
         if( ! empty( $values['product'] ) )
@@ -106,7 +112,6 @@ class Coupon_Table_Abstract extends PageCarton_Widget
         ); 
 
         $postTypesAvailable = Application_Article_Type_TypeAbstract::getMyAllowedPostTypes();
-        // $postTypesAvailable[''] = 'Apply to all Product Types';
         asort( $postTypesAvailable );
 
         $fieldset->addElement( array( 'name' => 'product_type', 'label' => 'Apply only to these post types (Apply to all by default)',  'type' => 'SelectMultiple', 'multiple' => true, 'value' => @$values['product_type'] ), $postTypesAvailable );         
