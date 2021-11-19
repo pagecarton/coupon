@@ -38,30 +38,29 @@ class Coupon_Table_Creator extends Coupon_Table_Abstract
 			$this->createForm( 'Save...', 'Create Coupon' );
 			$this->setViewContent( $this->getForm()->view() );
 
-		//	self::v( $_POST );
 			if( ! $values = $this->getForm()->getValues() ){ return false; }
-			
+
+            $successMessage = 'Coupon code has been successfully added to the Coupon Management System. You can now begin to use this code to promote your products and services. Customers can use this code in two ways:
+
+            1. Customers can enter this coupon code "' . $values['code'] . '" on checkout to get value of the coupon.
+            2. Customer can use the following link to access the website, the coupon will be activated automatically when they get to the checkout: ' . Ayoola_Page::getHomePageUrl() . '?coupon=' . $values['code'];
+
+
 			//	Notify Admin
 			$mailInfo = array();
-			$mailInfo['subject'] = __CLASS__;
-			$mailInfo['body'] = 'Form submitted on your PageCarton Installation with the following information: "' . self::arrayToString( $values ) . '". 
-			
-			';
+			$mailInfo['subject'] = 'Coupon Code Created Successfully';
+			$mailInfo['body'] = $successMessage;
 			try
 			{
-		//		var_export( $mailInfo );
 				@Ayoola_Application_Notification::mail( $mailInfo );
 			}
 			catch( Ayoola_Exception $e ){ null; }
-		//	if( ! $this->insertDb() ){ return false; }
-			if( $this->insertDb( $values ) )
+
+            if( $this->insertDb( $values ) )
 			{ 
-				$this->setViewContent(  '' . self::__( '<div class="goodnews">Added successfully. </div>' ) . '', true  ); 
+				$this->setViewContent(  '' . self::__( '<p class="goodnews">Coupon created successfully. </p>' ) . '', true  ); 
+				$this->setViewContent(  '<br><p class="">' . nl2br( $successMessage ) . '</p>' ); 
 			}
-		//	$this->setViewContent( $this->getForm()->view() );
-            
-
-
             // end of widget process
           
 		}  

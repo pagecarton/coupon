@@ -29,7 +29,7 @@ class Coupon_Table_Delete extends Coupon_Table_Abstract
 		{ 
             //  Code that runs the widget goes here...
 			if( ! $data = $this->getIdentifierData() ){ return false; }
-			$this->createConfirmationForm( 'Delete', 'Delete' );
+			$this->createConfirmationForm( 'Delete Coupon', 'Delete' );
 			$this->setViewContent( $this->getForm()->view(), true );
 			if( ! $values = $this->getForm()->getValues() ){ return false; }
             

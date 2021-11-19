@@ -77,7 +77,7 @@ class Coupon_Apply extends Coupon_Table_Abstract
                 $this->setViewContent( $form->view() ); 
                 return false;
             }
-            elseif( $coupon['usage'] >= $coupon['maximum_usage'] )
+            elseif( ! empty( $coupon['maximum_usage'] ) && $coupon['usage'] >= $coupon['maximum_usage'] )
             {
                 $this->setViewContent( '<p class="badnews">Promo Code usage has been exhausted!</p>', true ); 
                 $this->setViewContent( $form->view() ); 

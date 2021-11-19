@@ -50,7 +50,7 @@ class Coupon_Table_List extends Coupon_Table_Abstract
 		$list->setData( $this->getDbData() );
 		$list->setListOptions( 
 								array( 
-							            'Creator' => '<a rel="spotlight;" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Coupon_Table_Creator/\' );" title="">Create a Coupon Code</a>',    
+							            'Creator' => '<a rel="spotlight;" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Coupon_Table_Creator/\', \'page_refresh\' );" title="">Create a Coupon Code</a>',    
 									) 
 							);
 		$list->setKey( $this->getIdColumn() );

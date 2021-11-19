@@ -34,7 +34,7 @@ class Coupon_Table_Editor extends Coupon_Table_Abstract
 			if( ! $values = $this->getForm()->getValues() ){ return false; }
 
 
-			if( $this->updateDb( $values ) ){ $this->setViewContent(  '' . self::__( '<div class="goodnews">Data updated successfully</div>' ) . '', true  ); } 
+			if( $this->updateDb( $values ) ){ $this->setViewContent(  '' . self::__( '<div class="goodnews">Coupon data updated successfully</div>' ) . '', true  ); } 
 
              // end of widget process
           

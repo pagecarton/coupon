@@ -25,7 +25,7 @@ class Coupon_Table extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.2';  
+    protected $_tableVersion = '0.3';  
 
     /**
      * Table data types and declaration
@@ -34,7 +34,7 @@ class Coupon_Table extends PageCarton_Table
      * @param array
      */
 	protected $_dataTypes = array (
-  'code' => 'INPUTTEXT',
+  'code' => 'UNIQUE,INPUTTEXT',
   'value' => 'INPUTTEXT',
   'type' => 'INPUTTEXT',
   'product' => 'JSON',
