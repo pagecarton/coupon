@@ -46,7 +46,9 @@ class Coupon_Apply extends Coupon_Table_Abstract
             //  Output demo content to screen
             $form = new Ayoola_Form( array( 'name' => __CLASS__ ) );
             $fieldset = new Ayoola_Form_Element();
-            $fieldset->addElement( array( 'name' => 'code', 'type' => 'InputText', 'label' => 'Promo Code', 'placeholder' => 'Please enter promo code here...'  ) );
+            $previous = self::getObjectStorage( 'code' )->retrieve() ? : array();
+
+            $fieldset->addElement( array( 'name' => 'code', 'type' => 'InputText', 'label' => 'Promo Code', 'placeholder' => 'Enter promo code here (If you have any)...', 'value' => @$previous[0]  ) );
             $fieldset->addRequirements( array( 'NotEmpty' => null ) );
             $form->submitValue = 'Apply';
             $form->addFieldset( $fieldset );
@@ -155,6 +157,8 @@ class Coupon_Apply extends Coupon_Table_Abstract
 
         if( Application_Subscription::reset() )
         {
+            $_GET['coupon_applied'] = $code;
+            $_REQUEST['coupon_applied'] = $code;
             unset( $_GET['coupon'] );
             unset( $_REQUEST['coupon'] );
             header( 'Location: ' . Ayoola_Page::getCurrentUrl() );
@@ -306,19 +310,33 @@ class Coupon_Apply extends Coupon_Table_Abstract
                     {
                         if( ! empty( $_REQUEST['coupon'] ) )
                         {
+                            $code = strip_tags( $_REQUEST['coupon'] );
 
-                            $message = '<p class="badnews">Promo code ' . $_REQUEST['coupon'] .  ' could not be applied.</p>';
-                            if( self::apply( $_REQUEST['coupon'] ) )
+                            $message = '<p class="badnews">Promo code ' . $code .  ' could not be applied.</p>';
+                            if( self::apply( $code ) )
                             {
-                                $message = '<p class="goodnews">Promo code ' . $_REQUEST['coupon'] .  ' applied successfully.</p>';
+                                $message = '<p class="goodnews">Promo code ' . $code .  ' applied successfully.</p>';
                             }
+                        }
+                        elseif( ! empty( $_REQUEST['coupon_applied'] ) )
+                        {
+                            $code = strip_tags( $_REQUEST['coupon_applied'] );
+                            $previous = self::getObjectStorage( 'code' )->retrieve() ? : array();
+
+                            $message = '<p class="badnews">Promo code ' . $code .  ' could not be applied.</p>';
+                            if( in_array( $code, $previous ) )
+                            {
+                                $message = '<p class="goodnews">Promo code ' . $code .  ' applied successfully.</p>';
+                            }
+                        }
+                        if( ! empty( $message ) )
+                        {
                             $data['widgets'][] = array(
                                 'parameters' => array(
                                     'codes' => $message
                                 ),
                                 'class_name' => 'Ayoola_Page_Editor_Text'
                             );
-
                         }
                     }
                 break;
