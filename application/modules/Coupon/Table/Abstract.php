@@ -120,6 +120,15 @@ class Coupon_Table_Abstract extends PageCarton_Widget
         $fieldset->addElement( array( 'name' => 'maximum_usage', 'type' => 'InputText', 'label' => 'Maximum number of times this coupon can be used', 'placeholder' => 'e.g. 10', 'value' => @$values['maximum_usage'] ) );         
         $fieldset->addElement( array( 'name' => 'usage-x', 'label' => 'Current Usage', 'disabled' => true, 'type' => 'InputText', 'placeholder' => ' 0', 'value' => @$values['usage'] ) ); 
 
+
+        $options = array(
+            'unique' => 'Limit coupon to one per user',
+            'new-user' => 'Permit new users unly',
+        );
+
+        $fieldset->addElement( array( 'name' => 'options', 'label' => 'Coupon Options', 'type' => 'Checkbox', 'value' => @$values['options'] ), $options );  
+
+
 		$fieldset->addLegend( $legend );
 		$form->addFieldset( $fieldset );   
 		$this->setForm( $form );

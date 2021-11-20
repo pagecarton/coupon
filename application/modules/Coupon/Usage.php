@@ -25,7 +25,7 @@ class Coupon_Usage extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.2';  
+    protected $_tableVersion = '0.5';  
 
     /**
      * Table data types and declaration
@@ -37,6 +37,8 @@ class Coupon_Usage extends PageCarton_Table
         'code' => 'INPUTTEXT',
         'email' => 'INPUTTEXT',
         'username' => 'INPUTTEXT',
+        'status' => 'INPUTTEXT',
+        'user_duuid' => 'INPUTTEXT',
     );
 
 

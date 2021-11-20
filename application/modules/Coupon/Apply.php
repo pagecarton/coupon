@@ -83,7 +83,53 @@ class Coupon_Apply extends Coupon_Table_Abstract
                 $this->setViewContent( $form->view() ); 
                 return false;
             }
-               
+
+            if( ! empty( $coupon['options'] ) && in_array( 'unique', $coupon['options'] ) )
+            {
+
+                if( 
+                    $used = Coupon_Usage::getInstance()->selectOne( 
+                        null, 
+                        array( 
+                            '__duuid' => Ayoola_Application::getDeviceUId(), 
+                            'email' => Ayoola_Application::getUserInfo( 'email' ), 
+                            'username' => Ayoola_Application::getUserInfo( 'username' )
+                        ),
+                        array( 
+                            'where_join_operator' => '||'
+                        )
+                    )
+                )
+                {
+                    $this->setViewContent( '<p class="badnews">You may only use this promo code once, please contact support if this is an error!</p>', true ); 
+                    $this->setViewContent( $form->view() ); 
+                    return false;
+                }
+    
+            }
+            if( ! empty( $coupon['options'] ) && in_array( 'new-user', $coupon['options'] ) )
+            {
+    
+                if( 
+                    $used = Application_Subscription_Checkout_Order::getInstance()->selectOne( 
+                        null, 
+                        array( 
+                            '__duuid' => Ayoola_Application::getDeviceUId(), 
+                            'email' => Ayoola_Application::getUserInfo( 'email' ), 
+                            'username' => Ayoola_Application::getUserInfo( 'username' )
+                        ),
+                        array( 
+                            'where_join_operator' => '||'
+                        )
+                    )
+                )
+                {
+                    $this->setViewContent( '<p class="badnews">This promo code is specially made for new users. You seem to have ordered before on the platform!</p>', true ); 
+                    $this->setViewContent( $form->view() ); 
+                    return false;
+                }
+            }
+  
             if( self::apply( $values['code'] ) )
             {
                 $this->setViewContent( '<p class="goodnews">Promo code was applied successfully!</p>', true ); 
@@ -121,7 +167,7 @@ class Coupon_Apply extends Coupon_Table_Abstract
         {
             return false;
         }
-
+        
         if( intval( $coupon['start_date'] ) > time() )
         {
             return false;
@@ -130,9 +176,45 @@ class Coupon_Apply extends Coupon_Table_Abstract
         {
             return false;
         }
-        elseif( $coupon['usage'] >= $coupon['maximum_usage'] )
+        elseif( ! empty( $coupon['maximum_usage'] ) && $coupon['usage'] >= $coupon['maximum_usage'] )
         {
             return false;
+        }
+        if( ! empty( $coupon['options'] ) && in_array( 'unique', $coupon['options'] ) )
+        {
+            if( $used = Coupon_Usage::getInstance()->selectOne( null, 
+                    array( 
+                        '__duuid' => Ayoola_Application::getDeviceUId(), 
+                        'email' => Ayoola_Application::getUserInfo( 'email' ), 
+                        'username' => Ayoola_Application::getUserInfo( 'username' )
+                    ),
+                    array( 
+                        'where_join_operator' => '||'
+                    )
+                )
+            ) 
+            {
+                return false;
+            }
+        }
+        if( ! empty( $coupon['options'] ) && in_array( 'new-user', $coupon['options'] ) )
+        {
+            if( 
+                $used = Application_Subscription_Checkout_Order::getInstance()->selectOne( 
+                    null, 
+                    array( 
+                        '__duuid' => Ayoola_Application::getDeviceUId(), 
+                        'email' => Ayoola_Application::getUserInfo( 'email' ), 
+                        'username' => Ayoola_Application::getUserInfo( 'username' )
+                    ),
+                    array( 
+                        'where_join_operator' => '||'
+                    )
+                )
+            )
+            {
+                return false;
+            }
         }
 
         $previous = self::getObjectStorage( 'code' )->retrieve() ? : array();
@@ -154,6 +236,11 @@ class Coupon_Apply extends Coupon_Table_Abstract
         //var_export( $previous );
 
         self::getObjectStorage( 'code' )->store( $previous );
+
+        $where = array( 'code' => $coupon['code'] );
+
+        Coupon_Table::getInstance()->update( array( 'applied_count' => $coupon['applied_count'] + 1 ), $where );
+
 
         if( Application_Subscription::reset() )
         {
@@ -364,6 +451,41 @@ class Coupon_Apply extends Coupon_Table_Abstract
                 break;
             }
         }
+        elseif( $class === 'Application_Subscription_Checkout_Confirmation' )
+        {
+
+            switch( strtolower( $method ) )
+            { 
+                case '__construct':
+
+
+                    $previous = self::getObjectStorage( 'code' )->retrieve() ? : array();
+                    $orderInfo = Application_Subscription_Checkout::getCurrentOrderInfo();
+                    foreach( $previous as $code )
+                    {
+                        if( ! $coupon = Coupon_Table::getInstance()->selectOne( null, array( 'code' => $code ) ) )
+                        {
+                            return false;
+                        }
+                        Coupon_Table::getInstance()->update( array( 'completed' => $coupon['completed'] + 1 ), $where );
+                        Coupon_Usage::getInstance()->insert( 
+                            array( 
+                                'email' => @Ayoola_Application::getUserInfo( 'email') ? : $orderInfo['email'],
+                                'username' => Ayoola_Application::getUserInfo( 'username'),
+                                'code' => $code,
+                                'status' => 'checkout',
+                                'user_duuid' => Ayoola_Application::getDeviceUId(),
+                            )
+                        );                                
+    
+            
+                    }
+
+
+                    
+                break;
+            }
+        }
 
 
 	}
@@ -375,25 +497,36 @@ class Coupon_Apply extends Coupon_Table_Abstract
      */
 	public static function callback(& $orderInfo )
     {         
-       
-        if( ! empty( $orderInfo['code_used'] ) )
+        switch( strtolower( $orderInfo['order_status'] ) )
+        { 
+            case 'payment successful':
+            case '99':
+            case '100':
+                //  record payment success only
+			break;
+            default:
+                return false;
+            break;
+		}
+        if( ! empty( $orderInfo['payment_recorded'] ) )
         {
             return true;
         }
 
-
         $where = array( 'code' => $orderInfo['code'] );
-        $orderInfo['code_used'] = true;
+        $orderInfo['payment_recorded'] = true;
         if( ! $coupon = Coupon_Table::getInstance()->selectOne( null, $where ) )
         {
             return false;
         }
-        Coupon_Table::getInstance()->update( array( 'usage' => $coupon['usage'] + 1 ), $where );
+        Coupon_Table::getInstance()->update( array( 'completed' => $coupon['completed'] + 1 ), $where );
         Coupon_Usage::getInstance()->insert( 
             array( 
                 'email' => $orderInfo['full_order_info']['email'],
                 'username' => $orderInfo['full_order_info']['username'],
-                'code' => $orderInfo['code_used'],
+                'code' => $orderInfo['code'],
+                'status' => 'completed',
+                'user_duuid' => $orderInfo['full_order_info']['__duuid'],
             )
         );
         return true;

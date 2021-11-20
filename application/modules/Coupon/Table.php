@@ -25,7 +25,7 @@ class Coupon_Table extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.3';  
+    protected $_tableVersion = '0.6';  
 
     /**
      * Table data types and declaration
@@ -39,10 +39,13 @@ class Coupon_Table extends PageCarton_Table
   'type' => 'INPUTTEXT',
   'product' => 'JSON',
   'product_type' => 'JSON',
+  'options' => 'JSON',
   'start_date' => 'INPUTTEXT',
-  'expiry_date' => 'INT',
+  'expiry_date' => 'INPUTTEXT',
+  'completed' => 'INT',
+  'applied_count' => 'INT',
   'maximum_usage' => 'INT',
-  'usage' => 'INPUTTEXT',
+  'usage' => 'INT',
 );
 
 
