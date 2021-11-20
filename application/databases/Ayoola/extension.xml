@@ -20,11 +20,11 @@
       <TABLE_FIELD FIELD_KEY="__user_agent_id"><![CDATA[]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="__ip"><![CDATA[{&quot;REMOTE_ADDR&quot;:&quot;::1&quot;,&quot;HTTP_CLIENT_IP&quot;:&quot;&quot;,&quot;HTTP_X_FORWARDED_FOR&quot;:&quot;&quot;}]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="extension_title"><![CDATA[Coupon Code Management]]></TABLE_FIELD>
-      <TABLE_FIELD FIELD_KEY="modules"><![CDATA[[&quot;\/Coupon.php&quot;,&quot;\/Coupon\/Apply.php&quot;,&quot;\/Coupon\/Table.php&quot;,&quot;\/Coupon\/Table\/Abstract.php&quot;,&quot;\/Coupon\/Table\/Creator.php&quot;,&quot;\/Coupon\/Table\/Delete.php&quot;,&quot;\/Coupon\/Table\/Editor.php&quot;,&quot;\/Coupon\/Table\/List.php&quot;]]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="modules"><![CDATA[[&quot;\/Coupon.php&quot;,&quot;\/Coupon\/Apply.php&quot;,&quot;\/Coupon\/Table.php&quot;,&quot;\/Coupon\/Table\/Abstract.php&quot;,&quot;\/Coupon\/Table\/Creator.php&quot;,&quot;\/Coupon\/Table\/Delete.php&quot;,&quot;\/Coupon\/Table\/Editor.php&quot;,&quot;\/Coupon\/Table\/List.php&quot;,&quot;\/Coupon\/Usage.php&quot;]]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="settings_class"><![CDATA[Coupon_Settings]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="databases"><![CDATA[[&quot;\/Ayoola\/Page\/Menu\/option.xml&quot;,&quot;\/PageCarton\/hook.xml&quot;]]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="documents"><![CDATA[null]]></TABLE_FIELD>
-      <TABLE_FIELD FIELD_KEY="modified_time"><![CDATA[1637277461]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="modified_time"><![CDATA[1637412020]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="__update_user_id"><![CDATA[[&quot;1636631244.9718&quot;]]]></TABLE_FIELD>
     </TABLE_ROW>
   </RECORDS>
