@@ -88,8 +88,8 @@ class Coupon_Apply extends Coupon_Table_Abstract
             {
 
                 if( 
-                    $used = Coupon_Usage::getInstance()->selectOne( 
-                        null, 
+                    $used = Coupon_Usage::getInstance()->select( 
+                        'code', 
                         array( 
                             '__duuid' => Ayoola_Application::getDeviceUId(), 
                             'email' => Ayoola_Application::getUserInfo( 'email' ), 
@@ -101,9 +101,12 @@ class Coupon_Apply extends Coupon_Table_Abstract
                     )
                 )
                 {
-                    $this->setViewContent( '<p class="badnews">You may only use this promo code once, please contact support if this is an error!</p>', true ); 
-                    $this->setViewContent( $form->view() ); 
-                    return false;
+                    if( in_array( $coupon['code'], $used ) )
+                    {
+                        $this->setViewContent( '<p class="badnews">You may only use this promo code once, please contact support if this is an error!</p>', true ); 
+                        $this->setViewContent( $form->view() ); 
+                        return false;
+                    }
                 }
     
             }
@@ -167,7 +170,6 @@ class Coupon_Apply extends Coupon_Table_Abstract
         {
             return false;
         }
-        
         if( intval( $coupon['start_date'] ) > time() )
         {
             return false;
@@ -182,7 +184,10 @@ class Coupon_Apply extends Coupon_Table_Abstract
         }
         if( ! empty( $coupon['options'] ) && in_array( 'unique', $coupon['options'] ) )
         {
-            if( $used = Coupon_Usage::getInstance()->selectOne( null, 
+
+            if( 
+                $used = Coupon_Usage::getInstance()->select( 
+                    'code', 
                     array( 
                         '__duuid' => Ayoola_Application::getDeviceUId(), 
                         'email' => Ayoola_Application::getUserInfo( 'email' ), 
@@ -192,10 +197,14 @@ class Coupon_Apply extends Coupon_Table_Abstract
                         'where_join_operator' => '||'
                     )
                 )
-            ) 
+            )
             {
-                return false;
+                if( in_array( $coupon['code'], $used ) )
+                {
+                    return false;
+                }
             }
+
         }
         if( ! empty( $coupon['options'] ) && in_array( 'new-user', $coupon['options'] ) )
         {
