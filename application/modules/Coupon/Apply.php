@@ -91,9 +91,9 @@ class Coupon_Apply extends Coupon_Table_Abstract
                     $used = Coupon_Usage::getInstance()->select( 
                         'code', 
                         array( 
-                            '__duuid' => Ayoola_Application::getDeviceUId(), 
-                            'email' => Ayoola_Application::getUserInfo( 'email' ), 
-                            'username' => Ayoola_Application::getUserInfo( 'username' )
+                            '__duuid' => Ayoola_Application::getDeviceUId() ? : 'xxxxx-@@-dont-use-empty', 
+                            'email' => Ayoola_Application::getUserInfo( 'email' ) ? : 'xxxxx-@@-dont-use-empty', 
+                            'username' => Ayoola_Application::getUserInfo( 'username' ) ? : 'xxxxx-@@-dont-use-empty'
                         ),
                         array( 
                             'where_join_operator' => '||'
@@ -117,9 +117,9 @@ class Coupon_Apply extends Coupon_Table_Abstract
                     $used = Application_Subscription_Checkout_Order::getInstance()->selectOne( 
                         null, 
                         array( 
-                            '__duuid' => Ayoola_Application::getDeviceUId(), 
-                            'email' => Ayoola_Application::getUserInfo( 'email' ), 
-                            'username' => Ayoola_Application::getUserInfo( 'username' )
+                            '__duuid' => Ayoola_Application::getDeviceUId() ? : 'xxxxx-@@-dont-use-empty', 
+                            'email' => Ayoola_Application::getUserInfo( 'email' ) ? : 'xxxxx-@@-dont-use-empty', 
+                            'username' => Ayoola_Application::getUserInfo( 'username' ) ? : 'xxxxx-@@-dont-use-empty'
                         ),
                         array( 
                             'where_join_operator' => '||'
@@ -189,9 +189,9 @@ class Coupon_Apply extends Coupon_Table_Abstract
                 $used = Coupon_Usage::getInstance()->select( 
                     'code', 
                     array( 
-                        '__duuid' => Ayoola_Application::getDeviceUId(), 
-                        'email' => Ayoola_Application::getUserInfo( 'email' ), 
-                        'username' => Ayoola_Application::getUserInfo( 'username' )
+                        '__duuid' => Ayoola_Application::getDeviceUId() ? : 'xxxxx-@@-dont-use-empty', 
+                        'email' => Ayoola_Application::getUserInfo( 'email' ) ? : 'xxxxx-@@-dont-use-empty', 
+                        'username' => Ayoola_Application::getUserInfo( 'username' ) ? : 'xxxxx-@@-dont-use-empty'
                     ),
                     array( 
                         'where_join_operator' => '||'
@@ -212,9 +212,9 @@ class Coupon_Apply extends Coupon_Table_Abstract
                 $used = Application_Subscription_Checkout_Order::getInstance()->selectOne( 
                     null, 
                     array( 
-                        '__duuid' => Ayoola_Application::getDeviceUId(), 
-                        'email' => Ayoola_Application::getUserInfo( 'email' ), 
-                        'username' => Ayoola_Application::getUserInfo( 'username' )
+                        '__duuid' => Ayoola_Application::getDeviceUId() ? : 'xxxxx-@@-dont-use-empty', 
+                        'email' => Ayoola_Application::getUserInfo( 'email' ) ? : 'xxxxx-@@-dont-use-empty', 
+                        'username' => Ayoola_Application::getUserInfo( 'username' ) ? : 'xxxxx-@@-dont-use-empty'
                     ),
                     array( 
                         'where_join_operator' => '||'
@@ -334,17 +334,17 @@ class Coupon_Apply extends Coupon_Table_Abstract
         switch( $coupon['type'] )
         {
             case 'percentage':   
-                $surchargeText = '- ' . $coupon['value'] . '% of ' . $cover . ' from pomo code ' . $coupon['code'] . '';
+                $surchargeText = '- ' . $coupon['value'] . '% discount on ' . $cover . '. From coupon code ' . $coupon['code'] . '';
                 $surchargePrice = ( $coupon['value']/100 ) * $totalQualifyingProductPrice;
             break;
             default:
-                $surchargeText = '- ' . $coupon['value'] . ' from pomo code ' . $coupon['code'] . ' for ' . $cover;
+                $surchargeText = '- ' . $coupon['value'] . ' discount on ' . $cover . '. From coupon code ' . $coupon['code'] . '';
 
                 if( $totalQualifyingProductPrice < $faceValue )
                 {
                     $faceValue = $totalQualifyingProductPrice;
                 }
-                $surchargeText = '- ' . $faceValue . ' from pomo code ' . $coupon['code'] . ' for ' . $cover;
+                $surchargeText = '- ' . $faceValue . ' discount on ' . $cover . '. From coupon code ' . $coupon['code'] . '';
                 $surchargePrice = $faceValue;
             break;
         }
